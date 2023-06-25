@@ -1,0 +1,86 @@
+diff --git a/node_modules/react-native-ussd-dial/index.js b/node_modules/react-native-ussd-dial/index.js
+index 66669a9..4da5964 100644
+--- a/node_modules/react-native-ussd-dial/index.js
++++ b/node_modules/react-native-ussd-dial/index.js
+@@ -5,12 +5,11 @@ import { NativeModules, Alert } from 'react-native';
+ 
+ var RNUssdDial = {
+     getDeviceName: () => {
+-        NativeModules.Device.getDeviceName((err, name) => {
+-            console.log(err, name);
+-        });
++        console.log('pepega', NativeModules.RNUssdDial);
++        return NativeModules.RNUssdDial.getDeviceName()
+     },
+     dialNumber: (number) => {
+-        NativeModules.Device.dialNumber((number) => {
++        NativeModules.RNUssdDial.dialNumber((number) => {
+             Alert.alert(number)
+         });
+     }
+diff --git a/node_modules/react-native-ussd-dial/ios/RNUssdDial.m b/node_modules/react-native-ussd-dial/ios/RNUssdDial.m
+index 666d919..cc43f1d 100644
+--- a/node_modules/react-native-ussd-dial/ios/RNUssdDial.m
++++ b/node_modules/react-native-ussd-dial/ios/RNUssdDial.m
+@@ -3,11 +3,18 @@
+ 
+ @implementation RNUssdDial
+ 
++RCT_EXPORT_MODULE(RNUssdDial)
++
++RCT_EXPORT_METHOD(getDeviceName:(RCTPromiseResolveBlock)resolve
++                rejecter:(RCTPromiseRejectBlock)reject)
++{
++ NSString *device = [[UIDevice currentDevice] name];
++ resolve(device);
++}
++
+ - (dispatch_queue_t)methodQueue
+ {
+-    return dispatch_get_main_queue();
++   return dispatch_get_main_queue();
+ }
+-RCT_EXPORT_MODULE()
+ 
+ @end
+-  
+\ No newline at end of file
+diff --git a/node_modules/react-native-ussd-dial/ios/RNUssdDial.podspec b/node_modules/react-native-ussd-dial/react-native-ussd-dial.podspec
+similarity index 65%
+rename from node_modules/react-native-ussd-dial/ios/RNUssdDial.podspec
+rename to node_modules/react-native-ussd-dial/react-native-ussd-dial.podspec
+index 18e2516..78140b8 100644
+--- a/node_modules/react-native-ussd-dial/ios/RNUssdDial.podspec
++++ b/node_modules/react-native-ussd-dial/react-native-ussd-dial.podspec
+@@ -1,18 +1,21 @@
++require "json"
++
++package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+ 
+ Pod::Spec.new do |s|
+-  s.name         = "RNUssdDial"
+-  s.version      = "1.0.0"
++  s.name         = package["name"]
++  s.version      = package["version"]
+   s.summary      = "RNUssdDial"
+   s.description  = <<-DESC
+                   RNUssdDial
+                    DESC
+-  s.homepage     = ""
++  s.homepage     = "https://github.com/author/RNUssdDial.git"
+   s.license      = "MIT"
+   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+   s.author             = { "author" => "author@domain.cn" }
+   s.platform     = :ios, "7.0"
+   s.source       = { :git => "https://github.com/author/RNUssdDial.git", :tag => "master" }
+-  s.source_files  = "RNUssdDial/**/*.{h,m}"
++  s.source_files  = "ios/**/*.{h,m}"
+   s.requires_arc = true
+ 
+ 
+@@ -21,4 +24,3 @@ Pod::Spec.new do |s|
+ 
+ end
+ 
+-  
+\ No newline at end of file
